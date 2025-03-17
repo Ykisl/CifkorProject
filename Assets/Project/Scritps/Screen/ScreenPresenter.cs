@@ -5,9 +5,9 @@ namespace CifkorApp.Screen
 {
     public abstract class ScreenPresenter<TModel, TView> : MonoBehaviour where TModel : ScreenModel where TView : ScreenView
     {
-        [SerializeField] private TView _view;
+        [SerializeField] protected TView _view;
 
-        private TModel _model;
+        protected TModel _model;
 
         [Inject]
         private void Construct(TModel model)

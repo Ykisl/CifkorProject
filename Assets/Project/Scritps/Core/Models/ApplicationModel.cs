@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using CifkorApp.DogBreeds;
-using CifkorApp.Forecast;
+using CifkorApp.DogBreeds.Model;
+using CifkorApp.Forecast.Models;
 using CifkorApp.Screen;
 using Zenject;
 
-namespace CifkorApp.Core
+namespace CifkorApp.Core.Model
 {
     public class ApplicationModel
     {

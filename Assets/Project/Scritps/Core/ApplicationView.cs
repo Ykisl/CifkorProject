@@ -1,3 +1,4 @@
+using CifkorApp.Core.Model;
 using CifkorApp.Screen;
 using System;
 using System.Collections.Generic;
@@ -23,20 +24,6 @@ namespace CifkorApp.Core
         {
             _tabButtonFactory = tabButtonFactory;
         }
-
-        #region UNITY_EVENTS
-
-        protected virtual void OnEnable()
-        {
-
-        }
-
-        protected virtual void OnDisable()
-        {
-            
-        }
-
-        #endregion
 
         public void Initialize(ApplicationModel model)
         {

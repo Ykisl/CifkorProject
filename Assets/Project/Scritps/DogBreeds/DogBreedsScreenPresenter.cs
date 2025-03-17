@@ -1,3 +1,4 @@
+using CifkorApp.DogBreeds.Model;
 using CifkorApp.Screen;
 using UnityEngine;
 

@@ -1,6 +1,6 @@
 using CifkorApp.Screen;
 
-namespace CifkorApp.DogBreeds
+namespace CifkorApp.DogBreeds.Model
 {
     public class DogBreedsScreenModel : ScreenModel
     {

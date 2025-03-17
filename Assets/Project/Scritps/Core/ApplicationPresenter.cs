@@ -1,3 +1,4 @@
+using CifkorApp.Core.Model;
 using CifkorApp.Screen;
 using UnityEngine;
 using Zenject;
