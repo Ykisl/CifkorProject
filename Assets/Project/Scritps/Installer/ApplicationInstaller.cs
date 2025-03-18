@@ -1,4 +1,5 @@
 using CifkorApp.Core.Model;
+using CifkorApp.DogBreeds;
 using CifkorApp.DogBreeds.Model;
 using CifkorApp.Forecast;
 using CifkorApp.Forecast.Models;
@@ -48,8 +49,10 @@ namespace CifkorApp
         private void InstallSystems()
         {
             Container.BindInterfacesAndSelfTo<WebRequestSystem>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ForecastSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<WebSpriteSystem>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<ForecastSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DogBreedsSystem>().AsSingle();
         }
     }
 }

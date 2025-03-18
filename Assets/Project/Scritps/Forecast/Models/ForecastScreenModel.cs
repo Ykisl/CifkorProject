@@ -1,38 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using CifkorApp.Screen;
 using CifkorApp.Utils;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using Zenject;
 
 namespace CifkorApp.Forecast.Models
 {
-    public class ForecastScreenModel : ScreenModel
+    public class ForecastScreenModel : LoadableScreenModel
     {
         private IForecastSystem _forecastSystem;
 
-        private CancellationTokenSource _screenCancellation;
-
-        private bool _isLoading;
         private List<ForecastPeriodDataModel> _forecastData;
         private TimerModel _refreshTimer;
 
         private const int DATA_REFRESH_TIME = 5;
 
         public event Action OnForecastDataChanged;
-        public event Action OnLoadingStateChanged;
-
-        public bool IsLoading
-        {
-            get => _isLoading;
-            protected set
-            {
-                _isLoading = value;
-                OnLoadingStateChanged?.Invoke();
-            }
-        }
 
         public IList<ForecastPeriodDataModel> ForecastData
         {
@@ -58,7 +42,6 @@ namespace CifkorApp.Forecast.Models
 
         public override void Activate()
         {
-            _screenCancellation = new CancellationTokenSource();
             base.Activate();
 
             _refreshTimer.OnTimerFinished += HandleRefreshTimerFinished;
@@ -71,9 +54,6 @@ namespace CifkorApp.Forecast.Models
         {
             _refreshTimer.Deinitialize();
             _refreshTimer.OnTimerFinished -= HandleRefreshTimerFinished;
-
-            _screenCancellation?.Cancel();
-            _screenCancellation = null;
 
             base.Deactivate();
         }
@@ -90,7 +70,7 @@ namespace CifkorApp.Forecast.Models
 
         public void UpdateRefreshTimer(float delta)
         {
-            if (_isLoading)
+            if (IsLoading)
             {
                 return;
             }
@@ -108,6 +88,7 @@ namespace CifkorApp.Forecast.Models
             IsLoading = true;
 
             var forecastResult = await _forecastSystem.GetForecast(_screenCancellation.Token);
+
             _forecastData.Clear();
             if (forecastResult != null)
             {
