@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using CifkorApp.Screen;
+using CifkorApp.Utils;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
 namespace CifkorApp.Forecast.Models
 {
-    public class ForecastScreenModel : ScreenModel, ITickable
+    public class ForecastScreenModel : ScreenModel
     {
         private IForecastSystem _forecastSystem;
 
@@ -16,6 +17,9 @@ namespace CifkorApp.Forecast.Models
 
         private bool _isLoading;
         private List<ForecastPeriodModel> _forecastData;
+        private TimerModel _refreshTimer;
+
+        private const int DATA_REFRESH_TIME = 5;
 
         public event Action OnForecastDataChanged;
         public event Action OnLoadingStateChanged;
@@ -35,9 +39,15 @@ namespace CifkorApp.Forecast.Models
             get => _forecastData;
         }
 
+        public TimerModel RefreshTimer
+        {
+            get => _refreshTimer;
+        }
+
         public ForecastScreenModel() : base("Forecast") 
         {
             _forecastData = new List<ForecastPeriodModel>();
+            _refreshTimer = new TimerModel();
         }
 
         [Inject]
@@ -51,25 +61,30 @@ namespace CifkorApp.Forecast.Models
             _screenCancellation = new CancellationTokenSource();
             base.Activate();
 
+            _refreshTimer.OnTimerFinished += HandleRefreshTimerFinished;
+            _refreshTimer.Initialize(DATA_REFRESH_TIME);
+
             UpdateForecast().Forget();
         }
 
         public override void Deactivate()
         {
+            _refreshTimer.Deinitialize();
+            _refreshTimer.OnTimerFinished -= HandleRefreshTimerFinished;
+
             _screenCancellation?.Cancel();
             _screenCancellation = null;
 
             base.Deactivate();
         }
 
-        public void Tick()
+        public void Update(float deltaTime)
         {
             if (!_isActive)
             {
                 return;
             }
 
-            var deltaTime = Time.deltaTime;
             UpdateRefreshTimer(deltaTime);
         }
 
@@ -79,6 +94,8 @@ namespace CifkorApp.Forecast.Models
             {
                 return;
             }
+
+            _refreshTimer.Update(delta);
         }
 
         public async UniTask UpdateForecast()
@@ -99,6 +116,13 @@ namespace CifkorApp.Forecast.Models
 
             OnForecastDataChanged?.Invoke();
             IsLoading = false;
+
+            _refreshTimer.Reset();
+        }
+
+        private void HandleRefreshTimerFinished(TimerModel timer)
+        {
+            UpdateForecast().Forget();
         }
     }
 }

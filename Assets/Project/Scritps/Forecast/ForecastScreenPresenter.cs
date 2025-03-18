@@ -1,10 +1,21 @@
 using CifkorApp.Forecast.Models;
 using CifkorApp.Screen;
+using UnityEngine;
 
 namespace CifkorApp.Forecast
 {
     public class ForecastScreenPresenter : ScreenPresenter<ForecastScreenModel, ForecastScreenView>
     {
+        #region UNITY_EVENTS
+
+        protected virtual void Update()
+        {
+            var deltaTime = Time.deltaTime;
+            _model.Update(deltaTime);
+        }
+
+        #endregion
+
         protected override void SubscribeEvents()
         {
             base.SubscribeEvents();
