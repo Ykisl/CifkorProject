@@ -4,6 +4,7 @@ using CifkorApp.Forecast;
 using CifkorApp.Forecast.Models;
 using CifkorApp.Screen;
 using CifkorApp.WebRequest;
+using CifkorApp.WebSprite;
 using UnityEngine;
 using Zenject;
 
@@ -48,6 +49,7 @@ namespace CifkorApp
         {
             Container.BindInterfacesAndSelfTo<WebRequestSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<ForecastSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WebSpriteSystem>().AsSingle();
         }
     }
 }

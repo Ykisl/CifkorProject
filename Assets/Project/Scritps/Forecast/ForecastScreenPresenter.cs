@@ -1,7 +1,5 @@
 using CifkorApp.Forecast.Models;
 using CifkorApp.Screen;
-using System;
-using UnityEngine;
 
 namespace CifkorApp.Forecast
 {

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using CifkorApp.Screen;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Zenject;
 
 namespace CifkorApp.Forecast.Models
 {
-    public class ForecastScreenModel : ScreenModel
+    public class ForecastScreenModel : ScreenModel, ITickable
     {
         private IForecastSystem _forecastSystem;
 
@@ -59,6 +60,25 @@ namespace CifkorApp.Forecast.Models
             _screenCancellation = null;
 
             base.Deactivate();
+        }
+
+        public void Tick()
+        {
+            if (!_isActive)
+            {
+                return;
+            }
+
+            var deltaTime = Time.deltaTime;
+            UpdateRefreshTimer(deltaTime);
+        }
+
+        public void UpdateRefreshTimer(float delta)
+        {
+            if (_isLoading)
+            {
+                return;
+            }
         }
 
         public async UniTask UpdateForecast()
