@@ -38,7 +38,7 @@ namespace CifkorApp
                     pool.WithInitialSize(2).FromComponentInNewPrefab(_tabButtonViewPrefab).UnderTransformGroup("[Pool] ScreenTabButtonView");
                 });
             
-            Container.BindFactory<ForecastPeriodModel, ForecastPeriodView, ForecastPeriodView.Factory>()
+            Container.BindFactory<ForecastPeriodDataModel, ForecastPeriodView, ForecastPeriodView.Factory>()
                 .FromMonoPoolableMemoryPool(pool =>
                 {
                     pool.WithInitialSize(2).FromComponentInNewPrefab(_forecastPreiodViewPrefab).UnderTransformGroup("[Pool] ForecastPeriodView");

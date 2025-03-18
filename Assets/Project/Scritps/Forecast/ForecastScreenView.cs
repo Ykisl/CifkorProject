@@ -29,7 +29,7 @@ namespace CifkorApp.Forecast
             UpdateLoadingView();
         }
 
-        public void SetForecastData(IList<ForecastPeriodModel> data)
+        public void SetForecastData(IList<ForecastPeriodDataModel> data)
         {
             ClearForecastData();
 

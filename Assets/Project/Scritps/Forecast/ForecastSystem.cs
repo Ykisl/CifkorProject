@@ -37,41 +37,32 @@ namespace CifkorApp.Forecast
             _serviceCancellationTokenSource.Cancel();
         }
 
-        public async UniTask<ICollection<ForecastPeriodModel>> GetForecast(CancellationToken cancellationToken = default)
+        public async UniTask<ICollection<ForecastPeriodDataModel>> GetForecast(CancellationToken cancellationToken = default)
         {
-            if (!_serviceCancellationTokenSource.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+            var requestCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_serviceCancellationTokenSource.Token, cancellationToken);
+            if (requestCancellationToken.IsCancellationRequested)
             {
-                var requestCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_serviceCancellationTokenSource.Token, cancellationToken);
-
-                var getForecastRequset = new GetForecastWebRequest(requestCancellationToken.Token);
-                _webRequestSystem.AddRequestToQueue(getForecastRequset);
-
-                var result = await getForecastRequset.WaitForResult();
-                if (result.ResultType != EWebRequestResultType.OK)
-                {
-                    return null;
-                }
-
-                var periodModels = new List<ForecastPeriodModel>();
-                foreach (var periodData in result.Data.Properties.Periods)
-                {
-                    var periodIconSprite = await _webSpriteSystem.GetWebSprite(periodData.Icon.ToString(), requestCancellationToken.Token);
-
-                    var periodModel = new ForecastPeriodModel()
-                    {
-                        Name = periodData.Name,
-                        Temperature = periodData.Temperature,
-                        TemperatureUnit = periodData.TemperatureUnit,
-                        Icon = periodIconSprite
-                    };
-
-                    periodModels.Add(periodModel);
-                }
-
-                return periodModels;
+                return null;
             }
 
-            return null;
+            var getForecastRequset = new GetForecastWebRequest(requestCancellationToken.Token);
+            _webRequestSystem.AddRequestToQueue(getForecastRequset);
+
+            var result = await getForecastRequset.WaitForResult();
+            if (result.ResultType != EWebRequestResultType.OK)
+            {
+                return null;
+            }
+
+            var responseData = result.Data;
+            var periodModels = responseData.Properties.Periods;
+            foreach (var periodData in periodModels)
+            {
+                var periodIconSprite = await _webSpriteSystem.GetWebSprite(periodData.IconUrl, requestCancellationToken.Token);
+                periodData.IconSprite = periodIconSprite;
+            }
+
+            return periodModels;
         }
     }
 }

@@ -1,34 +1,34 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Unity.Plastic.Newtonsoft.Json;
+using UnityEngine;
 
-namespace CifkorApp.Forecast.Web
+namespace CifkorApp.Forecast.Models
 {
-    public class ForecastWebResponse
-    {
-        public ForecastProperties Properties;
-    }
-
-    public class ForecastProperties
-    {
-        public string Units;
-        public string ForecastGenerator;
-        public List<ForecastPeriod> Periods;
-    }
-
-    public class ForecastPeriod
+    public class ForecastPeriodDataModel
     {
         public long Number;
         public string Name;
+
         public DateTimeOffset StartTime;
         public DateTimeOffset EndTime;
+
         public bool IsDaytime;
         public int Temperature;
+
         public string TemperatureUnit;
         public string TemperatureTrend;
+
         public string WindSpeed;
         public string WindDirection;
-        public Uri Icon;
+
+        [JsonProperty("Icon")]
+        public string IconUrl;
+
+        [JsonIgnore]
+        public Sprite IconSprite;
+
         public string ShortForecast;
         public string DetailedForecast;
+
     }
 }

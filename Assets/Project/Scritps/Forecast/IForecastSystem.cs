@@ -7,6 +7,6 @@ namespace CifkorApp.Forecast
 {
     public interface IForecastSystem
     {
-        UniTask<ICollection<ForecastPeriodModel>> GetForecast(CancellationToken cancellationToken = default);
+        UniTask<ICollection<ForecastPeriodDataModel>> GetForecast(CancellationToken cancellationToken = default);
     }
 }

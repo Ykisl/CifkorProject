@@ -16,7 +16,7 @@ namespace CifkorApp.Forecast.Models
         private CancellationTokenSource _screenCancellation;
 
         private bool _isLoading;
-        private List<ForecastPeriodModel> _forecastData;
+        private List<ForecastPeriodDataModel> _forecastData;
         private TimerModel _refreshTimer;
 
         private const int DATA_REFRESH_TIME = 5;
@@ -34,7 +34,7 @@ namespace CifkorApp.Forecast.Models
             }
         }
 
-        public IList<ForecastPeriodModel> ForecastData
+        public IList<ForecastPeriodDataModel> ForecastData
         {
             get => _forecastData;
         }
@@ -46,7 +46,7 @@ namespace CifkorApp.Forecast.Models
 
         public ForecastScreenModel() : base("Forecast") 
         {
-            _forecastData = new List<ForecastPeriodModel>();
+            _forecastData = new List<ForecastPeriodDataModel>();
             _refreshTimer = new TimerModel();
         }
 
