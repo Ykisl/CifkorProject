@@ -3,6 +3,7 @@ using CifkorApp.DogBreeds;
 using CifkorApp.DogBreeds.Model;
 using CifkorApp.Forecast;
 using CifkorApp.Forecast.Models;
+using CifkorApp.MessageBox.Model;
 using CifkorApp.Screen;
 using CifkorApp.WebRequest;
 using CifkorApp.WebSprite;
@@ -30,6 +31,8 @@ namespace CifkorApp
             Container.Bind<ApplicationModel>().AsSingle();
             Container.Bind<ForecastScreenModel>().AsSingle();
             Container.Bind<DogBreedsScreenModel>().AsSingle();
+
+            Container.Bind<MessageBoxScreenModel>().AsSingle();
         }
 
         private void InstallApplicationPools() 

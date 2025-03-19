@@ -2,7 +2,6 @@ using CifkorApp.DogBreeds.Model;
 using CifkorApp.Screen;
 using System;
 using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +15,9 @@ namespace CifkorApp.DogBreeds
         private DogBreedView.Factory _breedViewFactory;
 
         private Dictionary<DogBreedView, DogBreedDataModel> _breedsViewItems = new Dictionary<DogBreedView, DogBreedDataModel>();
+        private DogBreedDataModel _loadingBreed;
+
+        public event Action<DogBreedDataModel> OnBreedModelSelected;
 
         [Inject]
         private void Construct(DogBreedView.Factory breedViewFactory)
@@ -65,6 +67,13 @@ namespace CifkorApp.DogBreeds
 
             _breedsViewItems.Clear();
             UpdateLoadingView();
+            UpdateBrredItemsLoadingView();
+        }
+
+        public void SetLoadingBreed(DogBreedDataModel loadingBreed)
+        {
+            _loadingBreed = loadingBreed;
+            UpdateBrredItemsLoadingView();
         }
 
         protected override void UpdateLoadingView()
@@ -73,9 +82,26 @@ namespace CifkorApp.DogBreeds
             _loadingIndicator.SetActive(isLoadingVisible);
         }
 
+        private void UpdateBrredItemsLoadingView()
+        {
+            foreach(var breedViews in _breedsViewItems)
+            {
+                var view = breedViews.Key;
+                var model = breedViews.Value;
+
+                var isLoading = model == _loadingBreed;
+                view.SetIsLoading(isLoading);
+            }
+        }
+
         private void HandleBreedViewItemClicked(DogBreedView view)
         {
+            if(!_breedsViewItems.TryGetValue(view, out var breedModel))
+            {
+                return;
+            }
 
+            OnBreedModelSelected?.Invoke(breedModel);
         }
     }
 }

@@ -1,35 +1,35 @@
-using System.Collections.Generic;
-using System.Threading;
-using UnityEngine.Networking;
-using Unity.Plastic.Newtonsoft.Json;
-using CifkorApp.WebRequest;
 using CifkorApp.DogBreeds.Model;
+using CifkorApp.WebRequest;
+using System.Threading;
+using Unity.Plastic.Newtonsoft.Json;
+using UnityEngine.Networking;
 
 namespace CifkorApp.DogBreeds.Web
 {
-    public class GetDogBreedsWebRequest : BaseWebRequest<GetDogBreedsWebRequest.Response>
+    public class GetDogBreedWebRequest : BaseWebRequest<GetDogBreedWebRequest.Response>
     {
         public class Response
         {
-            public List<DogBreedDataModel> Data;
+            public DogBreedDataModel Data;
         }
 
         private const string TARGET_URL = "https://dogapi.dog/api/v2/breeds";
 
-        private int? _pageIndex;
+        private string _breedId;
 
-        public GetDogBreedsWebRequest(int? pageIndex = null, CancellationToken cancellationToken = default) : base(cancellationToken)
+        public GetDogBreedWebRequest(string breedId, CancellationToken cancellationToken = default) : base(cancellationToken)
         {
-            _pageIndex = pageIndex;
-            if (_pageIndex.HasValue && _pageIndex.Value < 1)
-            {
-                _pageIndex = 1;
-            }
+            _breedId = breedId;
         }
 
         public override UnityWebRequest CreateRequest()
         {
-            var apiUrl = GetBreedsApiUrl(_pageIndex);
+            if (string.IsNullOrEmpty(_breedId))
+            {
+                return null;
+            }
+
+            var apiUrl = GetBreedsApiUrl(_breedId);
             return UnityWebRequest.Get(apiUrl);
         }
 
@@ -51,14 +51,9 @@ namespace CifkorApp.DogBreeds.Web
             return new WebRequestResult<Response>(jsonReuslt, response);
         }
 
-        private string GetBreedsApiUrl(int? pageIndex)
+        private string GetBreedsApiUrl(string breedId)
         {
-            var targetUrl = TARGET_URL;
-            if(pageIndex != null)
-            {
-                targetUrl += $"?page[number]={pageIndex}";
-            }
-
+            var targetUrl = $"{TARGET_URL}/{breedId}";
             return targetUrl;
         }
     }
