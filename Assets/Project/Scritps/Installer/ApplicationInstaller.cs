@@ -15,6 +15,7 @@ namespace CifkorApp
     {
         [SerializeField] private ScreenTabButtonView _tabButtonViewPrefab;
         [SerializeField] private ForecastPeriodView _forecastPreiodViewPrefab;
+        [SerializeField] private DogBreedView _dogBreedViewPrefab;
 
         public override void InstallBindings()
         {
@@ -43,6 +44,12 @@ namespace CifkorApp
                 .FromMonoPoolableMemoryPool(pool =>
                 {
                     pool.WithInitialSize(2).FromComponentInNewPrefab(_forecastPreiodViewPrefab).UnderTransformGroup("[Pool] ForecastPeriodView");
+                });
+
+            Container.BindFactory<DogBreedDataModel, DogBreedView, DogBreedView.Factory>()
+                .FromMonoPoolableMemoryPool(pool =>
+                {
+                    pool.WithInitialSize(2).FromComponentInNewPrefab(_dogBreedViewPrefab).UnderTransformGroup("[Pool] DogBreedView");
                 });
         }
 

@@ -3,30 +3,22 @@ using UnityEngine;
 using CifkorApp.Forecast.Models;
 using CifkorApp.Screen;
 using Zenject;
-using TMPro;
 
 namespace CifkorApp.Forecast
 {
-    public class ForecastScreenView : ScreenView
+    public class ForecastScreenView : LoadableScreenView
     {
         [SerializeField] private Transform _periodViewRoot;
-        [SerializeField] private TextMeshProUGUI _loadingText;
+        [SerializeField] private GameObject _loadingIndicator;
 
         private ForecastPeriodView.Factory _viewFactory;
 
         private List<ForecastPeriodView> _periodViewItems = new List<ForecastPeriodView>();
-        private bool _isLoading;
 
         [Inject]
         private void Consturct(ForecastPeriodView.Factory viewFactory)
         {
             _viewFactory = viewFactory;
-        }
-
-        public void SetIsLoading(bool isLoading)
-        {
-            _isLoading = isLoading;
-            UpdateLoadingView();
         }
 
         public void SetForecastData(IList<ForecastPeriodDataModel> data)
@@ -63,10 +55,10 @@ namespace CifkorApp.Forecast
             UpdateLoadingView();
         }
 
-        private void UpdateLoadingView()
+        protected override void UpdateLoadingView()
         {
             var isLoadingVisible = _isLoading && _periodViewItems.Count <= 0;
-            _loadingText.gameObject.SetActive(isLoadingVisible);
+            _loadingIndicator.SetActive(isLoadingVisible);
         }
     }
 }

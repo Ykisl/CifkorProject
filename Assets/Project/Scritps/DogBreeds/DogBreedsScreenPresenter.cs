@@ -1,10 +1,31 @@
 using CifkorApp.DogBreeds.Model;
 using CifkorApp.Screen;
-using UnityEngine;
 
 namespace CifkorApp.DogBreeds
 {
-    public class DogBreedsScreenPresenter : ScreenPresenter<DogBreedsScreenModel, ScreenView>
+    public class DogBreedsScreenPresenter : LoadableScreenPresenter<DogBreedsScreenModel, DogBreedsScreenView>
     {
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+            _model.OnBreedsDataCahnged += HandleBreedsDataChanged;
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+            _model.OnBreedsDataCahnged -= HandleBreedsDataChanged;
+        }
+
+        protected override void UpdateView()
+        {
+            base.UpdateView();
+            _view.SetBreedsData(_model.BreedsData);
+        }
+
+        private void HandleBreedsDataChanged()
+        {
+            UpdateView();
+        }
     }
 }
